@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, createContext } from 'react';
+import { useState, useEffect, useRef, createContext } from 'react';
 import mapboxgl from 'mapbox-gl';
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -21,6 +21,8 @@ const Map: React.FC<MapProps> = ({ lng, lat, zoom, children }) => {
     const mapContainer = useRef<HTMLDivElement>(null);
     const map = useRef<mapboxgl.Map | null>(null);
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
         map.current = new mapboxgl.Map({
@@ -31,6 +33,10 @@ const Map: React.FC<MapProps> = ({ lng, lat, zoom, children }) => {
             attributionControl: false,
         });
 
+        map.current.on('load', () => {
+            setIsLoading(false);
+        });
+
         return () => {
             map.current?.remove();
         };
@@ -38,8 +44,13 @@ const Map: React.FC<MapProps> = ({ lng, lat, zoom, children }) => {
 
     return (
         <MapContext.Provider value={{ map: map.current }}>
-            <div ref={mapContainer} className="w-full h-full rounded-xl">
-                {map.current && children}
+            <div ref={mapContainer} className="w-full h-full rounded-xl relative">
+                {isLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="loading loading-spinner h-32 w-32"></span>
+                    </div>
+                )}
+                {!isLoading && map.current && children}
             </div>
         </MapContext.Provider>
     );

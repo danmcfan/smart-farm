@@ -1,6 +1,4 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import Buttons from './Buttons';
 import Dropdown from './Dropdown';
@@ -15,7 +13,7 @@ type Dict<TValue> = {
     [key: string]: TValue;
 };
 
-const LayerControls = () => {
+const LayerControls: React.FC<{ selectedButton: any, setSelectedButton: any, selectedOption: any, setSelectedOption: any, selectedRange: any, setSelectedRange: any }> = ({ selectedButton, setSelectedButton, selectedOption, setSelectedOption, selectedRange, setSelectedRange }) => {
     const options: Dict<Option[]> = {
         "soil": [
             { value: "bulk_density", label: "Bulk Density (10 * kg / m^3)" },
@@ -37,10 +35,6 @@ const LayerControls = () => {
             { value: "ndvi", label: "NDVI" },
         ],
     };
-
-    const [selectedButton, setSelectedButton] = useState("soil");
-    const [selectedOption, setSelectedOption] = useState("bulk_density");
-    const [selectedRange, setSelectedRange] = useState(0);
 
     useEffect(() => {
         const defaultOption = options[selectedButton]?.[0]?.value;

@@ -5,7 +5,7 @@ const Dropdown: React.FC<{ options: any, selectedOption: any, setSelectedOption:
 
     return (
         <select
-            className="select select-bordered border-2 w-80 mb-4 text-lg"
+            className="select select-bordered border-2 w-72 lg:w-80 mb-4 text-md lg:text-lg transition-all duration-300 ease-in-out"
             value={selectedOption}
             onChange={handleChange}
         >

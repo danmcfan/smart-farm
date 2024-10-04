@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -17,14 +17,20 @@ import Controls from "@/components/controls";
 import Legend from "@/components/legend";
 
 export default function Page() {
-  const [column, setColumn] = useState({
-    name: "bulk_density_0",
-    min: 50,
-    max: 200,
-    layer: "soil",
-    attribute: "bulkDensity",
-    depth: 0,
-  });
+  const [layer, setLayer] = useState("soil");
+  const [attribute, setAttribute] = useState("bulkDensity");
+  const [depth, setDepth] = useState(0);
+
+  const [column, setColumn] = useState("bulk_density_0");
+  const [min, setMin] = useState(50);
+  const [max, setMax] = useState(200);
+
+  useEffect(() => {
+    const { column, min, max } = getColumn(attribute, depth);
+    setColumn(column);
+    setMin(min);
+    setMax(max);
+  }, [layer, attribute, depth]);
 
   return (
     <div className="w-screen h-screen">
@@ -42,15 +48,22 @@ export default function Page() {
               </Button>
             </SheetTrigger>
             <SheetContent className="pb-12" side="top">
-              <Controls column={column} setColumn={setColumn} />
+              <Controls
+                layer={layer}
+                attribute={attribute}
+                depth={depth}
+                setLayer={setLayer}
+                setAttribute={setAttribute}
+                setDepth={setDepth}
+              />
             </SheetContent>
           </Sheet>
           <div className="w-full">
-            <Legend min={column.min} max={column.max} />
+            <Legend min={min} max={max} />
           </div>
         </div>
         <div className="w-full h-full">
-          <Map column={column} />
+          <Map column={column} min={min} max={max} />
         </div>
         <div className="w-full h-32 flex items-center justify-center">
           <p className="text-sm font-bold">
@@ -60,14 +73,93 @@ export default function Page() {
       </div>
       <div className="grid-cols-4 gap-4 p-4 h-full hidden lg:grid">
         <div className="col-span-3">
-          <Map column={column} />
+          <Map column={column} min={min} max={max} />
         </div>
         <div className="p-2">
-          <Legend min={column.min} max={column.max} />
+          <Legend min={min} max={max} />
           <Separator className="my-4 w-full" />
-          <Controls column={column} setColumn={setColumn} />
+          <Controls
+            layer={layer}
+            attribute={attribute}
+            depth={depth}
+            setLayer={setLayer}
+            setAttribute={setAttribute}
+            setDepth={setDepth}
+          />
         </div>
       </div>
     </div>
   );
+}
+
+function getColumn(attribute: string, depth: number) {
+  const columns = {
+    bulkDensity: {
+      column: `bulk_density_${depth}`,
+      min: 50,
+      max: 200,
+    },
+    clayContent: {
+      column: `clay_${depth}`,
+      min: 0,
+      max: 50,
+    },
+    organicCarbon: {
+      column: `organic_carbon_${depth}`,
+      min: 0,
+      max: 60,
+    },
+    ph: {
+      column: `ph_${depth}`,
+      min: 40,
+      max: 100,
+    },
+    sandContent: {
+      column: `sand_${depth}`,
+      min: 0,
+      max: 100,
+    },
+    waterContent: {
+      column: `water_content_${depth}`,
+      min: 0,
+      max: 60,
+    },
+    precipitation: {
+      column: "prcp",
+      min: 0,
+      max: 10,
+    },
+    solarRadiation: {
+      column: "srad",
+      min: 200,
+      max: 600,
+    },
+    snowWaterEquivalent: {
+      column: "swe",
+      min: 0,
+      max: 1500,
+    },
+    minimumTemperature: {
+      column: "tmin",
+      min: -20,
+      max: 40,
+    },
+    maximumTemperature: {
+      column: "tmax",
+      min: -20,
+      max: 40,
+    },
+    waterVaporPressure: {
+      column: "vp",
+      min: 200,
+      max: 1400,
+    },
+    ndvi: {
+      column: "ndvi",
+      min: 0,
+      max: 0.5,
+    },
+  };
+
+  return columns[attribute as keyof typeof columns];
 }

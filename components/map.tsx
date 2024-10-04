@@ -41,17 +41,13 @@ const sources = [
 ];
 
 export default function Map({
-  column = {
-    name: "bulk_density_0",
-    min: 50,
-    max: 200,
-  },
+  column,
+  min,
+  max,
 }: {
-  column: {
-    name: string;
-    min: number;
-    max: number;
-  };
+  column: string;
+  min: number;
+  max: number;
 }) {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -89,10 +85,11 @@ export default function Map({
             "fill-color": [
               "interpolate",
               ["linear"],
-              ["get", column.name],
-              ...getColorOptions(column.min, column.max).flatMap(
-                (colorOption) => [colorOption.value, colorOption.color]
-              ),
+              ["get", column],
+              ...getColorOptions(min, max).flatMap((colorOption) => [
+                colorOption.value,
+                colorOption.color,
+              ]),
             ],
             "fill-opacity": 0.75,
           },
@@ -119,15 +116,15 @@ export default function Map({
         [
           "interpolate",
           ["linear"],
-          ["get", column.name],
-          ...getColorOptions(column.min, column.max).flatMap((colorOption) => [
+          ["get", column],
+          ...getColorOptions(min, max).flatMap((colorOption) => [
             colorOption.value,
             colorOption.color,
           ]),
         ]
       );
     });
-  }, [column, mounted]);
+  }, [column, min, max, mounted]);
 
   return (
     <div className="relative w-full h-full">

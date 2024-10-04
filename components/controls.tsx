@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { Shovel, Umbrella, Leaf } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
@@ -15,34 +12,20 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function Controls({
-  column,
-  setColumn,
+  layer,
+  attribute,
+  depth,
+  setLayer,
+  setAttribute,
+  setDepth,
 }: {
-  column: {
-    name: string;
-    min: number;
-    max: number;
-    layer: string;
-    attribute: string;
-    depth: number;
-  };
-  setColumn: (column: {
-    name: string;
-    min: number;
-    max: number;
-    layer: string;
-    attribute: string;
-    depth: number;
-  }) => void;
+  layer: string;
+  attribute: string;
+  depth: number;
+  setLayer: (layer: string) => void;
+  setAttribute: (attribute: string) => void;
+  setDepth: (depth: number) => void;
 }) {
-  const [layer, setLayer] = useState(column.layer);
-  const [attribute, setAttribute] = useState(column.attribute);
-  const [depth, setDepth] = useState(column.depth);
-
-  useEffect(() => {
-    setColumn(getColumn(layer, attribute, depth));
-  }, [layer, attribute, depth, setColumn]);
-
   return (
     <div className="flex flex-col w-full gap-8">
       <div>
@@ -212,81 +195,4 @@ function AttributeSelect({
       </Select>
     </div>
   );
-}
-
-function getColumn(layer: string, attribute: string, depth: number) {
-  const columns = {
-    bulkDensity: {
-      name: `bulk_density_${depth}`,
-      min: 50,
-      max: 200,
-    },
-    clayContent: {
-      name: `clay_${depth}`,
-      min: 0,
-      max: 50,
-    },
-    organicCarbon: {
-      name: `organic_carbon_${depth}`,
-      min: 0,
-      max: 60,
-    },
-    ph: {
-      name: `ph_${depth}`,
-      min: 40,
-      max: 100,
-    },
-    sandContent: {
-      name: `sand_${depth}`,
-      min: 0,
-      max: 100,
-    },
-    waterContent: {
-      name: `water_content_${depth}`,
-      min: 0,
-      max: 60,
-    },
-    precipitation: {
-      name: "prcp",
-      min: 0,
-      max: 10,
-    },
-    solarRadiation: {
-      name: "srad",
-      min: 200,
-      max: 600,
-    },
-    snowWaterEquivalent: {
-      name: "swe",
-      min: 0,
-      max: 1500,
-    },
-    minimumTemperature: {
-      name: "tmin",
-      min: -20,
-      max: 40,
-    },
-    maximumTemperature: {
-      name: "tmax",
-      min: -20,
-      max: 40,
-    },
-    waterVaporPressure: {
-      name: "vp",
-      min: 200,
-      max: 1400,
-    },
-    ndvi: {
-      name: "ndvi",
-      min: 0,
-      max: 0.5,
-    },
-  };
-
-  return {
-    ...columns[attribute as keyof typeof columns],
-    layer,
-    attribute,
-    depth,
-  };
 }

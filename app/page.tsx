@@ -52,6 +52,11 @@ export default function Page() {
         <div className="w-full h-full">
           <Map column={column} />
         </div>
+        <div className="w-full h-16 flex items-center justify-center">
+          <p className="text-sm font-bold">
+            Smart Farm © {new Date().getFullYear()}
+          </p>
+        </div>
       </div>
       <div className="grid-cols-4 gap-4 p-4 h-full hidden lg:grid">
         <div className="col-span-3">

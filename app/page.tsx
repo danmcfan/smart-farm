@@ -52,7 +52,7 @@ export default function Page() {
         <div className="w-full h-full">
           <Map column={column} />
         </div>
-        <div className="w-full h-16 flex items-center justify-center">
+        <div className="w-full h-32 flex items-center justify-center">
           <p className="text-sm font-bold">
             Smart Farm © {new Date().getFullYear()}
           </p>
